@@ -1,0 +1,82 @@
+
+* После установки Винды проблемы с русским шрифтом в путях к папках и т.п.
+Изменить кодировку для несистемной локали на русскую
+
+* Чтобы включить клавишу NUM LOCK до входа в систему
+выполните указанные ниже действия:
+    Откройте редактор реестра
+    Перейдите к разделу HKEY_USERS\.Default\Control Panel\Keyboard
+    Измените значение параметра InitialKeyboardIndicators с 0 на 2
+
+* To find which version of Windows you are running
+wmic os get caption
+wmic os get osarchitecture
+ver, winver
+
+* show installed java versions
+for %I in (java.exe) do @echo %~$PATH:I
+
+* set java version from console
+SETX JAVA_HOME "c:\Program Files (x86)\Java\java7"
+
+* local drives for CygWin
+cd /cygdrive/d
+
+* Перезагрузка/выключение компа через RDC
+Ctrl+Alt+End
+
+* Upgrading from WSL1 to WSL2 (to speed up Docker on Windows)
+https://docs.docker.com/docker-for-windows/wsl/
+https://dev.to/adityakanekar/upgrading-from-wsl1-to-wsl2-1fl9
+list existing distros: wsl -l -v
+set wsl version: wsl --set-version Ubuntu-18.04 2
+start Ubuntu shell: wsl -d Ubuntu-18.04
+
+* Fix issue when VSCode doesn't see system $PATH
+https://stackoverflow.com/questions/43983718/set-global-path-environment-variable-in-vs-code
+Press Ctrl+Shift+P, open "Preferences: Open Settings (JSON)", add next block:
+"terminal.integrated.env.windows": {
+  "PATH": "..."
+}
+Replace "..." with output of `echo "$PATH"` command
+
+* How to use unicode characters in Windows command line?
+https://stackoverflow.com/questions/388490/how-to-use-unicode-characters-in-windows-command-line
+chcp 65001 (was 866, change codepage)
+(использовал, чтобы обеспечить поддержку русских символов в респонсах curl-а в Windows cmd)
+
+* Как переименовать папку пользователя в Windows 10
+https://remontka.pro/rename-user-folder-windows-10/
+
+* Hosts location
+c:\windows\system32\drivers\etc\hosts
+
+* how to delete disk partiton on Win 10
+run cmd with admin permission
+diskpart
+list disk
+select disk N
+list partition
+select partition M
+delete partition override
+
+* Fix an issue when Ubuntu in Windows could not get update: "Temporary failure resolving 'security.ubuntu.com'"
+https://askubuntu.com/questions/91543/apt-get-update-fails-to-fetch-files-temporary-failure-resolving-error
+echo "nameserver 8.8.8.8" | sudo tee /etc/resolv.conf > /dev/null
+
+* Import Nexus cert into JDK store
+keytool -importcert -file nexus-cert.cer -keystore cacerts -alias "nexus-cert-alias"
+use password 'changeit' (default jdk store password)
+reply 'yes' on question about trusting to new certificate
+
+* Remove association between file extension and program which should open these files
+- In Registry Editor find node:
+Computer\HKEY_CURRENT_USER\Software\Microsoft\Windows\CurrentVersion\Explorer\FileExts
+- Under FileExts key, find the file exstension you want to remove file association for. Right-click and choose Delete
+
+* Add certificates to make call of secured service endpoint
+- from Swagger page - export certificate to .cer file (choose Base64 encoding)
+- Run from folder: C:\Users\<USERNAME>\Documents\JDK\jdk-11.0.9\bin
+keytool -list -keystore ..\lib\security\cacerts
+keytool -alias MY_CERT_FOR_BLA -import -keystore ..\lib\security\cacerts -file "C:\Users\<USERNAME>\Documents\certs\1.cer"
+
